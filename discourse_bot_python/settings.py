@@ -26,63 +26,70 @@ DEBUG = True
 API_USERNAME = 'hallucinator'
 
 API_KEY = os.environ['DIS_HALLUCINATOR_API_KEY']
-XJTUMEN_URL_BASE = "https://xjtu.app/posts.json"
+
+DIS_BOT_GPT_TOKEN = os.environ['DIS_BOT_GPT_TOKEN']
+GPT_API_BASE = os.environ['DIS_BOT_GPT_API_BASE']
+GPT_TOKEN = os.environ['DIS_BOT_GPT_TOKEN']
+GPT_DEPLOYMENT_NAME = os.environ['DIS_BOT_GPT_DEPLOYMENT_NAME']
+
+XJTUMEN_URL_BASE = "https://xjtu.app".rstrip('/')
 
 API_CALL_HEADERS = {
-  "Accept": "application/json; charset=utf-8",
-  "Api-Key": API_KEY,
-  "Api-Username": API_USERNAME,
+    "Accept": "application/json; charset=utf-8",
+    "Api-Key": API_KEY,
+    "Api-Username": API_USERNAME,
 }
 
+
 class AttrDict(dict):
-  __setattr__ = dict.__setitem__
-  __getattr__ = dict.__getitem__
+    __setattr__ = dict.__setitem__
+    __getattr__ = dict.__getitem__
 
 
 ALLOWED_HOSTS = [
-  'dbot.xjtu.app',
-  'dbotsrc.xjtu.app',
-  '127.0.0.1'
+    'dbot.xjtu.app',
+    'dbotsrc.xjtu.app',
+    '127.0.0.1'
 
 ]
 
 # Application definition
 
 INSTALLED_APPS = [
-  'django.contrib.admin',
-  'django.contrib.auth',
-  'django.contrib.contenttypes',
-  'django.contrib.sessions',
-  'django.contrib.messages',
-  'django.contrib.staticfiles',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
 ]
 
 MIDDLEWARE = [
-  'django.middleware.security.SecurityMiddleware',
-  'django.contrib.sessions.middleware.SessionMiddleware',
-  'django.middleware.common.CommonMiddleware',
-  # 'django.middleware.csrf.CsrfViewMiddleware',
-  'django.contrib.auth.middleware.AuthenticationMiddleware',
-  'django.contrib.messages.middleware.MessageMiddleware',
-  'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 ROOT_URLCONF = 'discourse_bot_python.urls'
 
 TEMPLATES = [
-  {
-    'BACKEND': 'django.template.backends.django.DjangoTemplates',
-    'DIRS': [],
-    'APP_DIRS': True,
-    'OPTIONS': {
-      'context_processors': [
-        'django.template.context_processors.debug',
-        'django.template.context_processors.request',
-        'django.contrib.auth.context_processors.auth',
-        'django.contrib.messages.context_processors.messages',
-      ],
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
     },
-  },
 ]
 
 WSGI_APPLICATION = 'discourse_bot_python.wsgi.application'
@@ -91,28 +98,28 @@ WSGI_APPLICATION = 'discourse_bot_python.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-  'default': {
-    'ENGINE': 'django.db.backends.sqlite3',
-    'NAME': BASE_DIR / 'db.sqlite3',
-  }
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-  {
-    'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-  },
-  {
-    'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-  },
-  {
-    'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-  },
-  {
-    'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-  },
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
 ]
 
 # Internationalization

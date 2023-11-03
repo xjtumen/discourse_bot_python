@@ -10,7 +10,7 @@ from django.http import HttpResponse
 from django.views.decorators.http import require_POST
 
 from discourse_bot_python.settings import API_USERNAME
-from .compose_reply import reply_to_first_post
+from .compose_reply import reply_to_post
 
 
 def get_client_ips(request):
@@ -34,9 +34,11 @@ def is_valid_key(request):
 def is_valid_instance(request):
     instance = request.META.get('HTTP_X_DISCOURSE_INSTANCE')
     if instance:
-        return instance.removeprefix('https://') in ['xjtu.live', 'xjtu.app', 'xjtu.men', 'ipv4.xjtu.live', 'ipv6.xjtu.live', 'cf.xjtu.live']
+        return instance.removeprefix('https://') in ['xjtu.live', 'xjtu.app', 'xjtu.men', 'ipv4.xjtu.live',
+                                                     'ipv6.xjtu.live', 'cf.xjtu.live']
     else:
         return False
+
 
 def is_valid_ip(client_ips):
     trusted_ip = os.environ['DIS_BOT_WEBHOOK_TRUSTED_IP'].strip().split()
@@ -54,20 +56,24 @@ def example(request):
         print(request.META['HTTP_X_DISCOURSE_EVENT'])
         print(request.META['HTTP_X_DISCOURSE_EVENT_ID'])
         print(request.META['HTTP_X_DISCOURSE_EVENT_TYPE'])
-        try:
-            body = request.body.decode()
-            body = json.loads(body)
-            print(body)
-            if ('post' in body) and (body['post']['post_number']==1):
-                reply_to_first_post(body, first_post=True)
-                return HttpResponse('Successfully replied to topic')
-            elif ('post' in body) and (reply_to_user := body['post'].get('reply_to_user')) and (reply_to_user.get('username') == API_USERNAME):
-                reply_to_first_post(body, first_post=False)
-                return HttpResponse('Successfully replied to post')
-            else:
-                print(f'do not respond to body: {body}')
-                return HttpResponse('Ignored')
-        except Exception as e:
-            return HttpResponse(f'Internal Err: {e}')
+    # try:
+        body = request.body.decode()
+        body = json.loads(body)
+        print(body)
+        if (('post' in body) and (reply_to_user := body['post'].get('reply_to_user')) and (
+                reply_to_user.get('username') == API_USERNAME)):
+            reply_to_post(body, first_post=False, lookback=True)
+            return HttpResponse('Successfully replied to post')
+        elif (('post' in body) and f'@{API_USERNAME}' in body['post']['raw']):
+            reply_to_post(body, first_post=False, lookback=False)
+            return HttpResponse('Successfully replied to post')
+        elif ('post' in body) and (body['post']['post_number'] == 1):
+            reply_to_post(body, first_post=True, lookback=False)
+            return HttpResponse('Successfully replied to topic')
+        else:
+            print(f'do not respond to body: {body}')
+            return HttpResponse('Ignored')
+        # except Exception as e:
+        #     return HttpResponse(f'Internal Err: {e}')
     else:
         return HttpResponse('Unauthorized')
