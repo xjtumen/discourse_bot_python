@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -23,9 +23,25 @@ SECRET_KEY = 'django-insecure-m#)w&o-p*v!d%ykw08qtg(pmpzecpo268a0f#gl-r76s51#-dr
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+API_USERNAME = 'hallucinator'
+
+API_KEY = os.environ['DIS_HALLUCINATOR_API_KEY']
+XJTUMEN_URL_BASE = "https://xjtu.app/posts.json"
+
+API_CALL_HEADERS = {
+  "Accept": "application/json; charset=utf-8",
+  "Api-Key": API_KEY,
+  "Api-Username": API_USERNAME,
+}
+
+class AttrDict(dict):
+  __setattr__ = dict.__setitem__
+  __getattr__ = dict.__getitem__
+
 
 ALLOWED_HOSTS = [
   'dbot.xjtu.app',
+  'dbotsrc.xjtu.app',
   '127.0.0.1'
 
 ]

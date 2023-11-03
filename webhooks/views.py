@@ -1,5 +1,6 @@
 import hashlib
 import hmac
+import json
 import os
 
 from django.shortcuts import render
@@ -8,6 +9,8 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.http import require_POST
 
+from discourse_bot_python.settings import API_USERNAME
+from .compose_reply import reply_to_first_post
 
 
 def get_client_ips(request):
@@ -47,10 +50,24 @@ def is_valid_ip(client_ips):
 def example(request):
     valid_key = is_valid_key(request)
     client_ips = get_client_ips(request)
-    if is_valid_ip(client_ips) and valid_key:
+    if valid_key:
         print(request.META['HTTP_X_DISCOURSE_EVENT'])
         print(request.META['HTTP_X_DISCOURSE_EVENT_ID'])
         print(request.META['HTTP_X_DISCOURSE_EVENT_TYPE'])
-        return HttpResponse('true')
+        try:
+            body = request.body.decode()
+            body = json.loads(body)
+            print(body)
+            if ('post' in body) and (body['post']['post_number']==1):
+                reply_to_first_post(body, first_post=True)
+                return HttpResponse('Successfully replied to topic')
+            elif ('post' in body) and (reply_to_user := body['post'].get('reply_to_user')) and (reply_to_user.get('username') == API_USERNAME):
+                reply_to_first_post(body, first_post=False)
+                return HttpResponse('Successfully replied to post')
+            else:
+                print(f'do not respond to body: {body}')
+                return HttpResponse('Ignored')
+        except Exception as e:
+            return HttpResponse(f'Internal Err: {e}')
     else:
-        return HttpResponse('Hello, world. This is the webhook response.')
+        return HttpResponse('Unauthorized')
