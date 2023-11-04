@@ -2,7 +2,9 @@ import hashlib
 import hmac
 import json
 import os
+import random
 
+import redis
 from django.shortcuts import render
 
 # Create your views here.
@@ -68,12 +70,14 @@ def example(request):
         elif (('post' in body) and f'@{API_USERNAME}' in body['post']['raw']):
             res = reply_to_post(body, first_post=False, lookback=False)
             print(res)
-
             return HttpResponse('Successfully replied to @reply')
         elif ('post' in body) and (body['post']['post_number'] == 1):
             res = reply_to_post(body, first_post=True, lookback=False)
             print(res)
-
+            return HttpResponse('Successfully replied to topic')
+        elif ('post' in body):
+            res = reply_to_post(body, first_post=False, lookback=False, random_tiggered=True)
+            print(res)
             return HttpResponse('Successfully replied to topic')
         else:
             print(f'do not respond to body: {body}')

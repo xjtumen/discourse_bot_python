@@ -4,4 +4,4 @@ requests
 django
 lxml
 beautifulsoup4
-
+redis[hiredis]

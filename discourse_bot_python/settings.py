@@ -34,6 +34,8 @@ GPT_TOKEN = os.environ['DIS_BOT_GPT_TOKEN']
 GPT_DEPLOYMENT_NAME = os.environ['DIS_BOT_GPT_DEPLOYMENT_NAME']
 
 XJTUMEN_URL_BASE = "https://xjtu.app".rstrip('/')
+MAX_LOOK_BEHIND = 5
+
 
 API_CALL_HEADERS = {
     "Accept": "application/json; charset=utf-8",
@@ -48,8 +50,7 @@ class AttrDict(dict):
 
 
 ALLOWED_HOSTS = [
-    'dbot.xjtu.app',
-    'dbotsrc.xjtu.app',
+    'disbot.xjtu.app',
     '127.0.0.1'
 
 ]
