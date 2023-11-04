@@ -6,7 +6,8 @@ import random
 import redis
 import requests
 
-from discourse_bot_python.settings import XJTUMEN_URL_BASE, API_CALL_HEADERS, AttrDict, API_USERNAME, MAX_LOOK_BEHIND
+from discourse_bot_python.settings import XJTUMEN_URL_BASE, API_CALL_HEADERS, AttrDict, API_USERNAME, MAX_LOOK_BEHIND, \
+    RANDOM_TRIGGER_FACTOR
 from webhooks.call_oai_api import oai_respond
 from bs4 import BeautifulSoup
 
@@ -17,20 +18,21 @@ def single_true(iterable):
     i = iter(iterable)
     return any(i) and not any(i)
 
+def at_most_one_true(iterable):
+    return sum(map(bool, iterable)) <= 1
 
 def mutual_ex(a, b):
     return bool(a) != bool(b)
 
 
 def should_skip(i):
-    prob = math.exp(-1.3 * i)
-    prob = math.exp(-0.1 * i)
+    prob = math.exp(-RANDOM_TRIGGER_FACTOR * i)
     if random.random() < 1 - prob:
         return True
     else:
         return False
 def reply_to_post(body, first_post, lookback, random_tiggered=False):
-    assert single_true([random_tiggered, first_post, lookback])
+    assert at_most_one_true([random_tiggered, first_post, lookback])
     if not isinstance(body, AttrDict):
         body = AttrDict(body)
     post = AttrDict(body.post)
