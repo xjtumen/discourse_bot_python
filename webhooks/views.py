@@ -62,13 +62,18 @@ def example(request):
         print(body)
         if (('post' in body) and (reply_to_user := body['post'].get('reply_to_user')) and (
                 reply_to_user.get('username') == API_USERNAME)):
-            reply_to_post(body, first_post=False, lookback=True)
-            return HttpResponse('Successfully replied to post')
+            res = reply_to_post(body, first_post=False, lookback=True)
+            print(res)
+            return HttpResponse('Successfully replied to reply')
         elif (('post' in body) and f'@{API_USERNAME}' in body['post']['raw']):
-            reply_to_post(body, first_post=False, lookback=False)
-            return HttpResponse('Successfully replied to post')
+            res = reply_to_post(body, first_post=False, lookback=False)
+            print(res)
+
+            return HttpResponse('Successfully replied to @reply')
         elif ('post' in body) and (body['post']['post_number'] == 1):
-            reply_to_post(body, first_post=True, lookback=False)
+            res = reply_to_post(body, first_post=True, lookback=False)
+            print(res)
+
             return HttpResponse('Successfully replied to topic')
         else:
             print(f'do not respond to body: {body}')
