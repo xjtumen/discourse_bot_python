@@ -1,0 +1,35 @@
+[Unit]
+Description=discourse bot via webhook
+After=network.target network-online.target
+Requires=network-online.target
+
+[Service]
+User=iso
+Group=iso
+ExecStart=/home/iso/.py/oi/bin/gunicorn discourse_bot_python.wsgi
+WorkingDirectory=/home/iso/discourse_bot_python
+Environment=DIS_BOT_WEBHOOK_SECRET=''
+Environment=DIS_BOT_WEBHOOK_TRUSTED_IP=''
+Environment=DIS_HALLUCINATOR_API_KEY=''
+Environment=DIS_BOT_DJANGE_SECRET_KEY=''
+Environment=DIS_BOT_GPT_TOKEN=''
+Environment=DIS_BOT_GPT_API_BASE=''
+Environment=DIS_BOT_GPT_DEPLOYMENT_NAME=''
+StandardOutput=append:/var/log/disbot
+StandardError=append:/var/log/disbot
+TimeoutStopSec=5s
+PrivateTmp=true
+ProtectHome=false
+ProtectClock=yes
+ProtectControlGroups=yes
+ProtectKernelLogs=yes
+ProtectKernelModules=yes
+ProtectKernelTunables=yes
+ProtectSystem=strict
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+Restart=always
+RestartSec=6
+
+[Install]
+WantedBy=multi-user.target
+
