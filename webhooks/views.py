@@ -11,7 +11,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.views.decorators.http import require_POST
 
-from discourse_bot_python.settings import API_USERNAME
+from discourse_bot_python.settings import API_USERNAME, NEW_TOPIC_RANDOM_TRIGGER_PROB
 from .compose_reply import reply_to_post
 
 
@@ -73,7 +73,7 @@ def example(request):
             res = reply_to_post(body, first_post=False, lookback=False)
             print(res)
             return HttpResponse('Successfully replied to @reply')
-        elif ('post' in body) and (body['post']['post_number'] == 1) and (random.random() > 0.6):
+        elif ('post' in body) and (body['post']['post_number'] == 1) and (random.random() > NEW_TOPIC_RANDOM_TRIGGER_PROB):
             # new topic, 60% trigger
             res = reply_to_post(body, first_post=True, lookback=False)
             print(res)
