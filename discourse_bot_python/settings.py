@@ -22,8 +22,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ['DIS_BOT_DJANGE_SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
-
+DEBUG = True if os.environ.get('DJANGO_DEBUG') == 'True' else False
+# import logging
+# logging.warning(f'DEBUG: {DEBUG}')
 API_USERNAME = 'hallucinator'
 
 API_KEY = os.environ['DIS_HALLUCINATOR_API_KEY']
