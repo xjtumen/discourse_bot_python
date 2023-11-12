@@ -73,8 +73,8 @@ def example(request):
             res = reply_to_post(body, first_post=False, lookback=False)
             print(res)
             return HttpResponse('Successfully replied to @reply')
-        elif ('post' in body) and (body['post']['post_number'] == 1) and (random.random() > NEW_TOPIC_RANDOM_TRIGGER_PROB):
-            # new topic, 60% trigger
+        elif ('post' in body) and (body['post']['post_number'] == 1) and (random.random() < NEW_TOPIC_RANDOM_TRIGGER_PROB):
+            # new topic, 10% trigger
             res = reply_to_post(body, first_post=True, lookback=False)
             print(res)
             return HttpResponse('Successfully replied to topic')
